@@ -1,0 +1,6 @@
+*.txt
+*.swp
+*.jpg
+*.log
+build/bin
+build/rpm

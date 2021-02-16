@@ -1,0 +1,15 @@
+# Target
+#sniffer-tcp: True
+#sniffer-dns: True
+#sniffer-cmd: True
+
+#interface: 'eth0'
+
+# Ouput
+#console: True
+
+#logfile: True
+#logpath: '/var/log/sniffer'
+
+#elastic: False
+#elastichost: 'http://elastic:9200'

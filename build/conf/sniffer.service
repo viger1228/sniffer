@@ -1,0 +1,11 @@
+[Unit]
+Description=sniffer
+After=network.target
+[Service]
+Type=simple
+User=root
+ExecStart=/usr/local/bin/sniffer
+Restart=on-failure
+CPUQuota=5%
+[Install]
+WantedBy=multi-user.target
