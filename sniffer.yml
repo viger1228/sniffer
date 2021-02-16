@@ -1,15 +1,21 @@
 # Target
+# 監控目標，支援TCP及DNS，CMD指令監控尚未完成
 #sniffer-tcp: True
 #sniffer-dns: True
 #sniffer-cmd: True
 
+# 監聽網卡
 #interface: 'eth0'
 
 # Ouput
+# 輸出在 Console
+# 可用 journalctl -u sniffer.service 查看
 #console: True
 
+# 輸出至文件
 #logfile: True
 #logpath: '/var/log/sniffer'
 
+# 輸出至ELK
 #elastic: False
 #elastichost: 'http://elastic:9200'
