@@ -88,16 +88,13 @@ func getUser(s string) string {
 }
 
 // 讀取 "/proc/net/{tcp|upd}"
-func getNet(t string) {
+func getNet(t string, procPath string) {
 
-	var proc_path string
-	proc_path = PROC_PATH[t]
-
-	data, err := ioutil.ReadFile(proc_path)
+	data, err := ioutil.ReadFile(procPath)
 
 	if err != nil {
 		log.Println(err)
-		log.Println(proc_path)
+		log.Println(procPath)
 		os.Exit(1)
 	}
 	lines := strings.Split(string(data), "\n")
@@ -150,12 +147,22 @@ func parseNet(s string, t string) ConnState {
 }
 
 func Stats() {
+
+	for k, v :=range PROC_PATH{
+		_, err := os.Stat(v)
+		if os.IsNotExist(err){
+			PROC_PATH[k] = ""
+		}
+	}
+
 	for {
 		ConnStates = map[string]ConnState{}
-		getNet("tcp")
-		getNet("udp")
-		getNet("tcp6")
-		getNet("udp6")
+		for k, v :=range PROC_PATH{
+			if v == "" {
+				continue
+			}
+			getNet(k, v)
+		}
 		NetworkChan <- ConnStates
 		time.Sleep(time.Millisecond * 100)
 	}
