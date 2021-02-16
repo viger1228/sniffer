@@ -13,6 +13,7 @@ yum install -y https://github.com/viger1228/sniffer/releases/download/0.5/sniffe
 ### 配罝文件說明：
 
 ```yaml
+vim /etc/sniffer/sniffer.yml
 # Target
 # 監控目標，支援TCP及DNS，CMD指令監控尚未完成
 #sniffer-tcp: True
