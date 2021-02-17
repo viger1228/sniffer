@@ -7,34 +7,40 @@
 ### 安裝：
 
 ```shell
-yum install -y https://github.com/viger1228/sniffer/releases/download/0.5/sniffer-0.5.0.x86_64.rpm
+yum install -y https://github.com/viger1228/sniffer/releases/download/0.1/sniffer-0.1.0.x86_64.rpm
 ```
 
 ### 配罝文件說明：
 
 ```yaml
 vim /etc/sniffer/sniffer.yml
+
 # Target
 # 監控目標，支援TCP及DNS，CMD指令監控尚未完成
-#sniffer-tcp: True
-#sniffer-dns: True
-#sniffer-cmd: True
+sniffer-tcp: True
+sniffer-dns: True
+sniffer-cmd: True
 
 # 監聽網卡
-#interface: 'eth0'
+interface: 'eth0'
+
+# 忽略
+# excludeIP: ['127.0.0.1']
+# excludePort: [22,23]
+excludeIP: []
+excludePort: [9200]
 
 # Ouput
-# 輸出在 Console
-# 可用 journalctl -u sniffer.service 查看
-#console: True
+# 輸出 Console，可用 journalctl -u sniffer 查看
+console: True
 
 # 輸出至文件
-#logfile: True
-#logpath: '/var/log/sniffer'
+logfile: True
+logpath: '/var/log/sniffer'
 
 # 輸出至ELK
-#elastic: False
-#elastichost: 'http://elastic:9200'
+elastic: True
+elastichost: 'http://elastic:9200'
 ```
 
 ### 啟動&開機啟動

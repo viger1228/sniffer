@@ -50,6 +50,8 @@ type DNSInfo struct {
 
 var PacketChan = make(chan interface{}, 10240)
 
+var ConfData map[string]interface{}
+
 func getDev() string {
 	devName := ""
 	devs, _ := pcap.FindAllDevs()
@@ -107,7 +109,45 @@ func getPacket(d string) {
 		decoded := []gopacket.LayerType{}
 		parser.DecodeLayers(packet.Data(), &decoded)
 
-		if ip.Contents == nil || (ip.SrcIP.String() != IF_IP && ip.DstIP.String() != IF_IP) {
+		if ip.Contents == nil{
+			continue
+		}
+
+		// 非指定網卡IP
+		if ip.SrcIP.String() != IF_IP && ip.DstIP.String() != IF_IP {
+			continue
+		}
+
+		// 配罝過濾
+		exclude := false
+		excludeIP := ConfData["excludeIP"].([]interface{})
+		for _, v := range excludeIP{
+			IP := v.(string)
+			if ip.SrcIP.String() == IP || ip.DstIP.String() == IP{
+				exclude = true
+				break
+			}
+		}
+		excludePort := ConfData["excludePort"].([]interface{})
+		var srcPort int
+		var dstPort int
+		if tcp.Contents != nil {
+			srcPort = int(tcp.SrcPort)
+			dstPort = int(tcp.DstPort)
+		} else if udp.Contents != nil {
+			srcPort = int(udp.SrcPort)
+			dstPort = int(udp.DstPort)
+		} else {
+			continue
+		}
+		for _, v := range excludePort{
+			Port := v.(int)
+			if srcPort == Port || dstPort == Port {
+				exclude = true
+				break
+			}
+		}
+		if exclude {
 			continue
 		}
 

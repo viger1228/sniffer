@@ -12,6 +12,7 @@ import (
 )
 
 var ConfFile map[string]interface{}
+var elasticLock time.Time
 
 func Output(index string, data interface{}){
 	enableConsole := ConfFile["console"].(bool)
@@ -64,6 +65,11 @@ func File(index string, data interface{}){
 }
 
 func Elastic(index string, data interface{}){
+	// Lock 避免死循環
+	if time.Now().Sub(elasticLock) < 10 * time.Minute {
+		return
+	}
+
 	// 所有格式轉成 JSON
 	jsonData, err := json.Marshal(data)
 	if err != nil {
@@ -85,12 +91,14 @@ func Elastic(index string, data interface{}){
 	}
 
 	url := ConfFile["elastichost"].(string)
-	url += fmt.Sprintf("/%s-%s/_doc", index, now.Format("2006.01.02"))
+	url += fmt.Sprintf("/%s-%s/_doc",
+			index, now.Format("2006.01.02"))
 	content := "application/json"
 	body := strings.NewReader(string(jsonData))
 	resp, err := http.Post(url, content, body)
 	if err != nil {
 		fmt.Println(err)
+		elasticLock = time.Now()
 		return
 	}
 	defer resp.Body.Close()

@@ -40,6 +40,8 @@ func main(){
 
 	devName := confData["interface"].(string)
 
+	packet.ConfData = confData
+
 	if snifferTCP || snifferDNS {
 		go network.Stats()
 		go packet.Stats(devName)
@@ -66,6 +68,8 @@ func confFile()map[string]interface{}{
 		"sniffer-dns": true,
 		"sniffer-cmd": true,
 		"interface": "eth0",
+		"excludeIP": []string{},
+		"excludePort": []int{},
 		"console": true,
 		"logfile": true,
 		"logpath": "/var/log/sniffer",
