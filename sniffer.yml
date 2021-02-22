@@ -22,5 +22,5 @@ logfile: True
 logpath: '/var/log/sniffer'
 
 # 輸出至ELK
-elastic: True
+elastic: False
 elastichost: 'http://elastic:9200'

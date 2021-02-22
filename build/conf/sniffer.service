@@ -6,6 +6,6 @@ Type=simple
 User=root
 ExecStart=/usr/local/bin/sniffer
 Restart=on-failure
-CPUQuota=5%
+CPUQuota=20%
 [Install]
 WantedBy=multi-user.target

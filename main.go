@@ -3,12 +3,12 @@ package main
 import (
 	"encoding/json"
 	"github.com/viger1228/sniffer/network"
-	"github.com/viger1228/sniffer/packet"
 	"github.com/viger1228/sniffer/output"
+	"github.com/viger1228/sniffer/packet"
 	"log"
 
 	"fmt"
-	"github.com/go-yaml/yaml"
+	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"os"
 )
@@ -22,8 +22,8 @@ var DNSPacket []packet.DNSInfo
 var confData map[string]interface{}
 var confPath string
 
-func init(){
-	log.SetFlags(log.Ldate|log.Ltime|log.Lshortfile)
+func init() {
+	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
 	confData = confFile()
 
 	jsonData, _ := json.MarshalIndent(confData, "", " ")
@@ -32,7 +32,7 @@ func init(){
 	fmt.Println(string(jsonData))
 }
 
-func main(){
+func main() {
 
 	snifferTCP := confData["sniffer-tcp"].(bool)
 	snifferDNS := confData["sniffer-dns"].(bool)
@@ -47,13 +47,13 @@ func main(){
 		go packet.Stats(devName)
 	}
 
-	go func(){
-		for c := range network.NetworkChan{
+	go func() {
+		for c := range network.NetworkChan {
 			DataChan <- c
 		}
 	}()
-	go func(){
-		for c := range packet.PacketChan{
+	go func() {
+		for c := range packet.PacketChan {
 			DataChan <- c
 		}
 	}()
@@ -62,24 +62,24 @@ func main(){
 	allocate()
 }
 
-func confFile()map[string]interface{}{
+func confFile() map[string]interface{} {
 	yamlData := map[string]interface{}{
 		"sniffer-tcp": true,
 		"sniffer-dns": true,
 		"sniffer-cmd": true,
-		"interface": "eth0",
-		"excludeIP": []string{},
+		"interface":   "eth0",
+		"excludeIP":   []string{},
 		"excludePort": []int{},
-		"console": true,
-		"logfile": true,
-		"logpath": "/var/log/sniffer",
-		"elastic": false,
+		"console":     true,
+		"logfile":     true,
+		"logpath":     "/var/log/sniffer",
+		"elastic":     false,
 		"elastichost": "http://elastic:9200",
 	}
 
 	confPath = "/etc/sniffer/sniffer.yml"
 	_, err := os.Lstat("sniffer.yml")
-	if !os.IsNotExist(err){
+	if !os.IsNotExist(err) {
 		confPath = "sniffer.yml"
 	}
 	file, err := ioutil.ReadFile(confPath)
@@ -97,8 +97,8 @@ func confFile()map[string]interface{}{
 	return yamlData
 }
 
-func allocate(){
-	for data := range DataChan{
+func allocate() {
+	for data := range DataChan {
 		switch d := data.(type) {
 		case packet.TCPInfo:
 			key := ""
@@ -123,7 +123,7 @@ func allocate(){
 			d.Id = key
 			DNSPacket = append(DNSPacket, d)
 		case map[string]network.ConnState:
-			for _, p := range TCPPacket{
+			for _, p := range TCPPacket {
 				conn := d[p.Id]
 				p.Name = conn.Proc
 				p.User = conn.User
@@ -134,7 +134,7 @@ func allocate(){
 				output.Output("sniffer-tcp", p)
 			}
 			TCPPacket = []packet.TCPInfo{}
-			for _, p := range DNSPacket{
+			for _, p := range DNSPacket {
 				conn := d[p.Id]
 				p.Name = conn.Proc
 				p.User = conn.User
