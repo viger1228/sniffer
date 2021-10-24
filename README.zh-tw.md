@@ -4,47 +4,48 @@
 
 [English](https://github.com/viger1228/sniffer/blob/master/README.md)、[繁體中文](https://github.com/viger1228/sniffer/blob/master/README.zh-tw.md)
 
-No matter what method is used by the Hacker to hack the server, it would left access records behind on network layer. Security Sniffer can sniffer the TCP and DNS package currently, record in local file  or send to the ELK service.
+服務器無論是中木馬或是遭到入侵，黑客一定是會在網路層面留下痕跡。Security Sniffer 可以即時記錄TCP及DNS相關封包，並寫在本地日志或外傳到ELK。
 
-## Install：
+## 安裝
 
 ```shell
 yum install -y https://github.com/viger1228/sniffer/releases/download/0.1/sniffer-0.1.0.x86_64.rpm
 ```
 
-## Settings：
+## 配罝文件說明：
 
 ```yaml
 vim /etc/sniffer/sniffer.yml
 
 # Target
-# Support TCP and DNS, but CMD sniffer is unfinished.
+# 監控目標，支援TCP及DNS，CMD指令監控尚未完成
 sniffer-tcp: True
 sniffer-dns: True
-sniffer-cmd: False
+sniffer-cmd: True
 
-# Monitor Interface
+# 監聽網卡
 interface: 'eth0'
 
-# Exclude IP or Port
+# 忽略
 # excludeIP: ['127.0.0.1']
 # excludePort: [22,23]
 excludeIP: []
 excludePort: [9200]
 
-# Ouput to console，can use command 'journalctl -u sniffer' to show
+# Ouput
+# 輸出 Console，可用 journalctl -u sniffer 查看
 console: True
 
-# Ouput to local file
+# 輸出至文件
 logfile: True
 logpath: '/var/log/sniffer'
 
-# Output to ELK server
+# 輸出至ELK
 elastic: True
 elastichost: 'http://elastic:9200'
 ```
 
-## Startup & Auto Startup
+## 啟動&開機啟動
 
 ```shell
 systemctl start sniffer
