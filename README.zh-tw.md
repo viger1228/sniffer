@@ -2,7 +2,7 @@
 
 [![](https://img.shields.io/badge/powered%20by-walker-brightgreen.svg?style=flat-square)](https://github.com/viger1228) 
 
-[English](https://github.com/viger1228/sniffer/blob/master/README.md)、[繁體中文](https://github.com/viger1228/sniffer/blob/master/README.zh-tw.md)
+[English](https://github.com/viger1228/sniffer/blob/master/README.md) | [繁體中文](https://github.com/viger1228/sniffer/blob/master/README.zh-tw.md)
 
 服務器無論是中木馬或是遭到入侵，黑客一定是會在網路層面留下痕跡。Security Sniffer 可以即時記錄TCP及DNS相關封包，並寫在本地日志或外傳到ELK。
 
